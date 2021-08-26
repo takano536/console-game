@@ -139,7 +139,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ChoicesSelector.cpp" />
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FpsSustainer.cpp" />
@@ -157,7 +156,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArrowKey.h" />
-    <ClInclude Include="ChoicesSelector.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Enemy.h" />

@@ -14,8 +14,7 @@ int main()
 				break;
 
 			case 1:
-				std::cout << "option" << std::endl;
-				Sleep(3000);
+				option_loop();
 				break;
 
 			case 2:
