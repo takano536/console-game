@@ -11,6 +11,8 @@ public:
 	void init_screen_buffer();
 	void set_screen_buffer(short x, short y, char character, Color foreground_color, Color background_color);
 	void render();
+	short get_max_width();
+	short get_max_height();
 
 private:
 	static const short MAX_WIDTH = 120;               // ç≈ëÂâ°ïù

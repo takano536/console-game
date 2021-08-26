@@ -6,7 +6,7 @@ Wall::Wall(short x, short y)
 	curr_pos = COORD{x, y};
 	prev_pos = COORD{x, y};
 	graphic = '#';
-	foreground_color = static_cast<WORD>(Color::WHITE);
-	background_color = static_cast<WORD>(Color::BLACK);
+	foreground_color = Color::WHITE;
+	background_color = Color::BLACK;
 	hp = -1;
 }

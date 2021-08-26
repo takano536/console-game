@@ -5,38 +5,28 @@
 #include <iostream>
 #include "StlAllocator.h"
 #include "FpsSustainer.h"
+#include "Renderer.h"
+#include "Color.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Wall.h"
 #include "Goal.h"
 
-constexpr short MAX_WIDTH = 120;                                   // 最大横幅
-constexpr short MAX_HEIGHT = 30;                                   // 最大縦幅
-constexpr short HORIZONTAL_MARGIN = 20;                            // 横方向の空白幅
-constexpr short VERTICAL_MARGIN = 5;                               // 縦方向の空白幅
-constexpr COORD BUFFER_SIZE = {MAX_WIDTH, MAX_HEIGHT};             // バッファーサイズ
-constexpr COORD START_COORD = {0, 0};                              // 描画開始位置
-constexpr CONSOLE_CURSOR_INFO INVISIBLE_CURSOR_INFO = {1, FALSE};  // 不可視カーソルの引数
-constexpr char map_filepath[] = "./map.txt";                       // マップデータのファイルパス
+constexpr short HORIZONTAL_MARGIN = 20;       // 横方向の空白幅
+constexpr short VERTICAL_MARGIN = 5;          // 縦方向の空白幅
+constexpr char map_filepath[] = "./map.txt";  // マップデータのファイルパス
 
 int main()
 {
-	const SMALL_RECT WINDOW_SIZE = {0, 0, MAX_WIDTH - 1, MAX_HEIGHT - 1};  // 画面サイズ
-	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);                       // スクリーンバッファのハンドル
-
-	// cmd.exe の設定の指定
-	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &INVISIBLE_CURSOR_INFO);  // カーソルを不可視化
-	SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), BUFFER_SIZE);       // バッファサイズの指定
-	SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &WINDOW_SIZE);      // ウインドウサイズの指定
-
-	CHAR_INFO write_chars[MAX_HEIGHT][MAX_WIDTH] = {};  // スクリーンバッファに書き込む文字
+	Renderer renderer;
+	renderer.init_window();
 
 	std::vector<Wall, StlAllocator<Wall>> walls;
-	walls.reserve(MAX_WIDTH * MAX_HEIGHT);
+	walls.reserve(static_cast<std::vector<Wall, StlAllocator<Wall>>::size_type>(renderer.get_max_width()) * renderer.get_max_height());
 	std::vector<Enemy, StlAllocator<Enemy>> enemys;
-	enemys.reserve(MAX_WIDTH * MAX_HEIGHT);
+	enemys.reserve(static_cast<std::vector<Enemy, StlAllocator<Enemy>>::size_type>(renderer.get_max_width()) * renderer.get_max_height());
 	COORD player_start_point = COORD{1, 1};
-	COORD player_goal_point = COORD{MAX_HEIGHT - VERTICAL_MARGIN - 1, MAX_WIDTH - HORIZONTAL_MARGIN - 1};
+	COORD player_goal_point = COORD{static_cast<short>(renderer.get_max_height() - VERTICAL_MARGIN - 1), static_cast<short>(renderer.get_max_width() - HORIZONTAL_MARGIN - 1)};
 
 	// map.txt からマップ情報を読み込む
 	std::ifstream ifs(map_filepath);
@@ -55,7 +45,7 @@ int main()
 	{
 		for (auto c : str)
 		{
-			if (i > MAX_HEIGHT - VERTICAL_MARGIN || j > MAX_WIDTH - HORIZONTAL_MARGIN)
+			if (i > renderer.get_max_height() - VERTICAL_MARGIN || j > renderer.get_max_width() - HORIZONTAL_MARGIN)
 				is_failed = true;
 			switch (c)
 			{
@@ -97,13 +87,9 @@ int main()
 
 	// 壁とゴールをバッファに書き込む
 	Goal goal(player_goal_point.X, player_goal_point.Y);
-	write_chars[goal.get_curr_pos().Y][goal.get_curr_pos().X].Char.AsciiChar = goal.get_graphic();
-	write_chars[goal.get_curr_pos().Y][goal.get_curr_pos().X].Attributes = goal.get_foreground_color() + goal.get_background_color() * 16;
+	renderer.set_screen_buffer(goal.get_curr_pos().X, goal.get_curr_pos().Y, goal.get_graphic(), goal.get_foreground_color(), goal.get_background_color());
 	for (const auto& wall : walls)
-	{
-		write_chars[wall.get_curr_pos().Y][wall.get_curr_pos().X].Char.AsciiChar = wall.get_graphic();
-		write_chars[wall.get_curr_pos().Y][wall.get_curr_pos().X].Attributes = wall.get_foreground_color() + wall.get_background_color() * 16;
-	}
+		renderer.set_screen_buffer(wall.get_curr_pos().X, wall.get_curr_pos().Y, wall.get_graphic(), wall.get_foreground_color(), wall.get_background_color());
 
 	FpsSustainer fps_sustainer;
 	uint32_t frame_count = 0;
@@ -140,18 +126,14 @@ int main()
 		// バッファ書き込み
 		for (const auto& enemy : enemys)
 		{
-			write_chars[enemy.get_prev_pos().Y][enemy.get_prev_pos().X].Char.AsciiChar = ' ';
-			write_chars[enemy.get_prev_pos().Y][enemy.get_prev_pos().X].Attributes = enemy.get_foreground_color() + enemy.get_background_color() * 16;
-			write_chars[enemy.get_curr_pos().Y][enemy.get_curr_pos().X].Char.AsciiChar = enemy.get_graphic();
-			write_chars[enemy.get_curr_pos().Y][enemy.get_curr_pos().X].Attributes = enemy.get_foreground_color() + enemy.get_background_color() * 16;
+			renderer.set_screen_buffer(enemy.get_prev_pos().X, enemy.get_prev_pos().Y, ' ', Color::WHITE, Color::BLACK);
+			renderer.set_screen_buffer(enemy.get_curr_pos().X, enemy.get_curr_pos().Y, enemy.get_graphic(), enemy.get_foreground_color(), enemy.get_background_color());
 		}
-		write_chars[player.get_prev_pos().Y][player.get_prev_pos().X].Char.AsciiChar = ' ';
-		write_chars[player.get_prev_pos().Y][player.get_prev_pos().X].Attributes = player.get_foreground_color() + player.get_background_color() * 16;
-		write_chars[player.get_curr_pos().Y][player.get_curr_pos().X].Char.AsciiChar = player.get_graphic();
-		write_chars[player.get_curr_pos().Y][player.get_curr_pos().X].Attributes = player.get_foreground_color() + player.get_background_color() * 16;
+		renderer.set_screen_buffer(player.get_prev_pos().X, player.get_prev_pos().Y, ' ', Color::WHITE, Color::BLACK);
+		renderer.set_screen_buffer(player.get_curr_pos().X, player.get_curr_pos().Y, player.get_graphic(), player.get_foreground_color(), player.get_background_color());
 
 		// 描画反映
-		WriteConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE), reinterpret_cast<CHAR_INFO*>(write_chars), BUFFER_SIZE, START_COORD, const_cast<SMALL_RECT*>(&WINDOW_SIZE));
+		renderer.render();
 
 		// ループ抜ける
 		if (is_gameover)

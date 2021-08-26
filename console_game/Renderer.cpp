@@ -49,3 +49,13 @@ void Renderer::render()
 {
 	WriteConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE), reinterpret_cast<CHAR_INFO*>(screen_buffer), BUFFER_SIZE, START_COORD, const_cast<SMALL_RECT*>(&WINDOW_SIZE));
 }
+
+short Renderer::get_max_width()
+{
+	return MAX_WIDTH;
+}
+
+short Renderer::get_max_height()
+{
+	return MAX_HEIGHT;
+}

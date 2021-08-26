@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "Color.h"
 
 COORD Object::get_curr_pos() const
 {
@@ -15,11 +16,11 @@ char Object::get_graphic() const
 	return graphic;
 }
 
-WORD Object::get_foreground_color() const
+Color Object::get_foreground_color() const
 {
 	return foreground_color;
 }
-WORD Object::get_background_color() const
+Color Object::get_background_color() const
 {
 	return background_color;
 }

@@ -6,8 +6,8 @@ Player::Player(short x, short y)
 	curr_pos = COORD{x, y};
 	prev_pos = COORD{x, y};
 	graphic = '@';
-	foreground_color = static_cast<WORD>(Color::BLUE);
-	background_color = static_cast<WORD>(Color::WHITE);
+	foreground_color = Color::LIGHT_GREEN;
+	background_color = Color::BLACK;
 	hp = 3;
 	arrow_key.up = false;
 	arrow_key.down = false;

@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <windows.h>
+#include "Color.h"
 
 class Object
 {
@@ -10,15 +11,15 @@ public:
 	COORD get_curr_pos() const;
 	COORD get_prev_pos() const;
 	char get_graphic() const;
-	WORD get_foreground_color() const;
-	WORD get_background_color() const;
+	Color get_foreground_color() const;
+	Color get_background_color() const;
 
 protected:
 	COORD curr_pos;
 	COORD prev_pos;
 	char graphic;
-	WORD foreground_color;
-	WORD background_color;
+	Color foreground_color;
+	Color background_color;
 	int16_t hp;
 };
 
