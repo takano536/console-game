@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <windows.h>
 #include "Color.h"
 
@@ -9,7 +10,8 @@ public:
 	Renderer();
 	void init_window();
 	void init_screen_buffer();
-	void set_screen_buffer(short x, short y, char character, Color foreground_color, Color background_color);
+	void set_char(short x, short y, char character, Color foreground_color, Color background_color);
+	void set_string(short x, short y, const std::string& str, Color foreground_color, Color background_color);
 	void render();
 	short get_max_width();
 	short get_max_height();

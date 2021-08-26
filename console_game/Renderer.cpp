@@ -39,10 +39,20 @@ void Renderer::init_screen_buffer()
 	}
 }
 
-void Renderer::set_screen_buffer(short x, short y, char character, Color foreground_color, Color background_color)
+void Renderer::set_char(short x, short y, char character, Color foreground_color, Color background_color)
 {
 	screen_buffer[y][x].Char.AsciiChar = character;
 	screen_buffer[y][x].Attributes = static_cast<WORD>(foreground_color) + static_cast<WORD>(background_color) * 16;
+}
+
+void Renderer::set_string(short x, short y, const std::string& str, Color foreground_color, Color background_color)
+{
+	short len = str.size();
+	for (int i = 0; i < len; i++)
+	{
+		screen_buffer[y][x + i].Char.AsciiChar = str[i];
+		screen_buffer[y][x + i].Attributes = static_cast<WORD>(foreground_color) + static_cast<WORD>(background_color) * 16;
+	}
 }
 
 void Renderer::render()
