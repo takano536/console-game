@@ -26,3 +26,8 @@ void FpsSustainer::wait()
 		Sleep(sleep_time);
 	}
 }
+
+uint16_t FpsSustainer::get_fps()
+{
+	return FPS;
+}

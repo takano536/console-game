@@ -9,6 +9,7 @@ public:
 	FpsSustainer();
 	void init_start_time();
 	void wait();
+	uint16_t get_fps();
 
 private:
 	static const uint16_t FPS = 30;

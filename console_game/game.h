@@ -1,3 +1,5 @@
 #pragma once
 
-void game_loop();
+int game_loop();
+int gameover_loop();
+int gameclear_loop();

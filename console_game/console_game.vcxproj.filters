@@ -51,6 +51,9 @@
     <ClCompile Include="game.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="get_selected_choices.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\.clang-format" />
@@ -104,9 +107,15 @@
     <ClInclude Include="game.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="get_selected_choices.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="map.txt">
+      <Filter>リソース ファイル</Filter>
+    </Text>
+    <Text Include="ascii.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
   </ItemGroup>

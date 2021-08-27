@@ -56,6 +56,13 @@ void Renderer::set_string(short x, short y, const std::string& str, Color foregr
 	}
 }
 
+void Renderer::change_monochrome()
+{
+	for (int i = 0; i < MAX_HEIGHT; i++)
+		for (int j = 0; j < MAX_WIDTH; j++)
+			screen_buffer[i][j].Attributes = static_cast<WORD>(Color::WHITE) + static_cast<WORD>(Color::BLACK) * 16;
+}
+
 void Renderer::render()
 {
 	WriteConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE), reinterpret_cast<CHAR_INFO*>(screen_buffer), BUFFER_SIZE, START_COORD, const_cast<SMALL_RECT*>(&WINDOW_SIZE));

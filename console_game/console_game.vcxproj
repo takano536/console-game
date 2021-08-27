@@ -143,6 +143,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FpsSustainer.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="get_selected_choices.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="LinearAllocator.cpp" />
     <ClCompile Include="main.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="get_selected_choices.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="FpsSustainer.h" />
@@ -174,6 +176,7 @@
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="ascii.txt" />
     <Text Include="map.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
