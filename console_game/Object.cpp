@@ -1,4 +1,5 @@
 #include "Object.h"
+
 #include "Color.h"
 
 COORD Object::get_curr_pos() const

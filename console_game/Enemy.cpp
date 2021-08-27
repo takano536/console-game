@@ -1,4 +1,5 @@
 #include "Enemy.h"
+
 #include "Color.h"
 
 Enemy::Enemy(short x, short y, bool is_upper_case)

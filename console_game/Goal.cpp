@@ -1,4 +1,5 @@
-#include "goal.h"
+#include "Goal.h"
+
 #include "Color.h"
 
 Goal::Goal(short x, short y)

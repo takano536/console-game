@@ -1,6 +1,7 @@
+#include "Renderer.h"
+
 #include <cstdint>
 #include <windows.h>
-#include "Renderer.h"
 
 Renderer::Renderer()
     : BUFFER_SIZE({MAX_WIDTH, MAX_HEIGHT}),

@@ -1,4 +1,5 @@
 #include "Player.h"
+
 #include "Color.h"
 
 Player::Player(short x, short y)

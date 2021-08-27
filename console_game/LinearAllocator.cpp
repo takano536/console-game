@@ -1,7 +1,8 @@
-﻿#include <iostream>
+﻿#include "LinearAllocator.h"
+
+#include <iostream>
 #include <functional>
 #include <chrono>
-#include "LinearAllocator.h"
 using namespace std::chrono;
 
 LinearAllocator::LinearAllocator(void* ptr, const size_t size)

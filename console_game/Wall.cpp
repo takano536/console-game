@@ -1,4 +1,5 @@
 #include "Wall.h"
+
 #include "Color.h"
 
 Wall::Wall(short x, short y)
