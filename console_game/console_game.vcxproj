@@ -142,13 +142,14 @@
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FpsSustainer.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="LinearAllocator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="scene.cpp" />
+    <ClCompile Include="tilte.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -159,13 +160,14 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="FpsSustainer.h" />
     <ClInclude Include="iMemoryAllocator.h" />
     <ClInclude Include="LinearAllocator.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="scene.h" />
+    <ClInclude Include="title.h" />
     <ClInclude Include="StlAllocator.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="UniquePtrDeleter.h" />

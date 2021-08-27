@@ -1,6 +1,5 @@
-﻿#include <iostream>
-#include <windows.h>
-#include "scene.h"
+﻿#include "title.h"
+#include "game.h"
 
 int main()
 {
