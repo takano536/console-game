@@ -56,6 +56,11 @@ void Renderer::set_string(short x, short y, const std::string& str, Color foregr
 	}
 }
 
+char Renderer::get_char(short x, short y)
+{
+	return screen_buffer[y][x].Char.AsciiChar;
+}
+
 void Renderer::change_monochrome()
 {
 	for (int i = 0; i < MAX_HEIGHT; i++)

@@ -1,9 +1,12 @@
 #include "game.h"
 
 #include <iostream>
+#include <algorithm>
 #include <fstream>
 #include <vector>
 #include <string>
+#include <set>
+#include <utility>
 #include <windows.h>
 #include "StlAllocator.h"
 #include "Renderer.h"
@@ -56,22 +59,17 @@ int game_loop()
 		fps_sustainer.init_start_time();
 
 		player.move();
-		for (const auto& wall : walls)
-		{
-			// 壁と被っていたら前フレームの座標に戻す
-			if (is_collided(player, wall))  // bool is_collided(Object a, Object b) -> Object.cpp に有り
-				player.undo();
-		}
+		// 壁と被っていたら、前の座標に戻す
+		if (renderer.get_char(player.get_curr_pos().X, player.get_curr_pos().Y) == '#')
+			player.undo();
 
 		for (auto& enemy : enemys)
 		{
 			if (frame_count % 2)  // 敵の動く速さを調整
 				enemy.move();
-			for (auto& wall : walls)
-			{
-				if (is_collided(enemy, wall))
-					enemy.undo(), enemy.set_reverse();
-			}
+			// 壁と被っていたら、前の座標に戻す
+			if (renderer.get_char(enemy.get_curr_pos().X, enemy.get_curr_pos().Y) == '#')
+				enemy.undo(), enemy.set_reverse();
 			// ミス判定
 			if (is_collided(player, enemy))
 				is_gameover = true;
@@ -210,6 +208,18 @@ int load_map(std::vector<Wall, StlAllocator<Wall>>& walls, std::vector<Enemy, St
 {
 	Renderer renderer;
 
+	std::set<std::pair<int, int>> walls_pos_set;  // 壁の座標がかぶる可能性があるので、set で管理
+
+	// 一番外の壁がないと大変なことになるので、最初から入れとく
+	for (int i = 0; i < renderer.get_max_height() - BOTTOM_MARGIN; i++)  // 左の壁
+		walls_pos_set.insert(std::make_pair(0, i));
+	for (int i = 0; i < renderer.get_max_height() - BOTTOM_MARGIN; i++)  // 右の壁
+		walls_pos_set.insert(std::make_pair(renderer.get_max_width() - 1, i));
+	for (int i = 0; i < renderer.get_max_width(); i++)  // 上の壁
+		walls_pos_set.insert(std::make_pair(i, 0));
+	for (int i = 0; i < renderer.get_max_width(); i++)  // 下の壁
+		walls_pos_set.insert(std::make_pair(i, renderer.get_max_height() - 1 - BOTTOM_MARGIN));
+
 	// map.txt からマップ情報を読み込む
 	std::ifstream ifs(map_filepath);
 	if (ifs.fail())
@@ -235,7 +245,7 @@ int load_map(std::vector<Wall, StlAllocator<Wall>>& walls, std::vector<Enemy, St
 					player_goal_pos = COORD{j, i};
 					break;
 				case '#':
-					walls.push_back(Wall(j, i));
+					walls_pos_set.insert(std::make_pair(j, i));
 					break;
 				case 'E':
 					enemys.push_back(Enemy(j, i, true));
@@ -256,6 +266,10 @@ int load_map(std::vector<Wall, StlAllocator<Wall>>& walls, std::vector<Enemy, St
 		std::cerr << "Failed to open \"map.txt\"..." << std::endl;
 		return -1;
 	}
+
+	// walls の set を引数の vector にコピー
+	for (const auto& pos : walls_pos_set)
+		walls.push_back(Wall(pos.first, pos.second));
 
 	return 0;
 }

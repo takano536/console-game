@@ -12,6 +12,7 @@ public:
 	void init_screen_buffer();
 	void set_char(short x, short y, char character, Color foreground_color, Color background_color);
 	void set_string(short x, short y, const std::string& str, Color foreground_color, Color background_color);
+	char get_char(short x, short y);
 	void change_monochrome();
 	void render();
 	short get_max_width();
