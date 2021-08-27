@@ -7,22 +7,37 @@
 #include <string>
 #include <set>
 #include <utility>
+#include <random>
 #include <windows.h>
 #include "StlAllocator.h"
 #include "Renderer.h"
 #include "FpsSustainer.h"
 #include "Color.h"
 #include "Player.h"
-#include "Enemy.h"
+#include "StraightEnemy.h"
+#include "RandomEnemy.h"
 #include "Wall.h"
 #include "Goal.h"
 
 #include "get_selected_choices.h"
 
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
 static constexpr short BOTTOM_MARGIN = 5;  // 縦方向の空白幅
 static std::string map_filepath = "./map.txt";
 
-int load_map(std::vector<Wall, StlAllocator<Wall>>& walls, std::vector<Enemy, StlAllocator<Enemy>>& enemys, COORD& player_start_pos, COORD& player_goal_pos);
+int load_map(std::vector<Wall, StlAllocator<Wall>>& walls, std::vector<StraightEnemy, StlAllocator<StraightEnemy>>& straight_enemys, std::vector<RandomEnemy, StlAllocator<RandomEnemy>>& random_enemys, COORD& player_start_pos, COORD& player_goal_pos);
+
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+static std::random_device rd;
+static std::mt19937_64 mt64(rd());
+uint64_t get_rand()
+{
+	return mt64();
+}
+
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
 int game_loop()
 {
@@ -31,16 +46,18 @@ int game_loop()
 
 	std::vector<Wall, StlAllocator<Wall>> walls;
 	walls.reserve(static_cast<std::vector<Wall, StlAllocator<Wall>>::size_type>(renderer.get_max_width()) * renderer.get_max_height());
-	std::vector<Enemy, StlAllocator<Enemy>> enemys;
-	enemys.reserve(static_cast<std::vector<Enemy, StlAllocator<Enemy>>::size_type>(renderer.get_max_width()) * renderer.get_max_height());
+	std::vector<StraightEnemy, StlAllocator<StraightEnemy>> straight_enemys;
+	straight_enemys.reserve(static_cast<std::vector<StraightEnemy, StlAllocator<StraightEnemy>>::size_type>(renderer.get_max_width()) * renderer.get_max_height());
+	std::vector<RandomEnemy, StlAllocator<RandomEnemy>> random_enemys;
+	straight_enemys.reserve(static_cast<std::vector<RandomEnemy, StlAllocator<RandomEnemy>>::size_type>(renderer.get_max_width()) * renderer.get_max_height());
 	COORD player_start_pos = COORD{1, 1};
 	COORD player_goal_pos = COORD{static_cast<short>(renderer.get_max_height() - BOTTOM_MARGIN - 1), static_cast<short>(renderer.get_max_width() - 1)};
-	if (load_map(walls, enemys, player_start_pos, player_goal_pos) == -1)
+	if (load_map(walls, straight_enemys, random_enemys, player_start_pos, player_goal_pos) == -1)
 		return -1;
 
 	// vector のメモリ節約　なってるはず...
 	walls.shrink_to_fit();
-	enemys.shrink_to_fit();
+	straight_enemys.shrink_to_fit();
 
 	// 壁とゴールをバッファに書き込む
 	Goal goal(player_goal_pos.X, player_goal_pos.Y);
@@ -51,6 +68,7 @@ int game_loop()
 	FpsSustainer fps_sustainer;
 	uint32_t frame_count = 0;
 	Player player(player_start_pos.X, player_start_pos.Y);
+	uint8_t player_move_interval = 0;  // 等間隔で動くために使用
 	bool is_gameover = false;
 	bool is_gameclear = false;
 	while (!is_gameover && !is_gameclear)
@@ -58,14 +76,30 @@ int game_loop()
 		// 1 フレームの時間を確かめるため、現在時刻で初期化
 		fps_sustainer.init_start_time();
 
-		player.move();
+		// プレイヤーの移動
+		if (!player.is_long_press())
+		{
+			player.move();
+			player.update_arrow_key_flag();
+			player_move_interval = frame_count % 3;
+		}
+		else if (frame_count % 3 == player_move_interval)
+		{
+			player.update_arrow_key_flag();
+			player.move();
+		}
+		else
+		{
+			player.update_arrow_key_flag();
+		}
+
 		// 壁と被っていたら、前の座標に戻す
 		if (renderer.get_char(player.get_curr_pos().X, player.get_curr_pos().Y) == '#')
 			player.undo();
 
-		for (auto& enemy : enemys)
+		for (auto& enemy : straight_enemys)
 		{
-			if (frame_count % 2)  // 敵の動く速さを調整
+			if (frame_count % 2 == 0)  // 敵の動く速さを調整
 				enemy.move();
 			// 壁と被っていたら、前の座標に戻す
 			if (renderer.get_char(enemy.get_curr_pos().X, enemy.get_curr_pos().Y) == '#')
@@ -74,9 +108,25 @@ int game_loop()
 			if (is_collided(player, enemy))
 				is_gameover = true;
 		}
+		for (auto& enemy : random_enemys)
+		{
+			if (frame_count % 2 == 0)  // 敵の動く速さを調整
+				enemy.move(get_rand());
+			// 壁と被っていたら、前の座標に戻す
+			if (renderer.get_char(enemy.get_curr_pos().X, enemy.get_curr_pos().Y) == '#')
+				enemy.undo();
+			// ミス判定
+			if (is_collided(player, enemy))
+				is_gameover = true;
+		}
 
 		// バッファ書き込み
-		for (const auto& enemy : enemys)
+		for (const auto& enemy : straight_enemys)
+		{
+			renderer.set_char(enemy.get_prev_pos().X, enemy.get_prev_pos().Y, ' ', Color::WHITE, Color::BLACK);
+			renderer.set_char(enemy.get_curr_pos().X, enemy.get_curr_pos().Y, enemy.get_graphic(), enemy.get_foreground_color(), enemy.get_background_color());
+		}
+		for (const auto& enemy : random_enemys)
 		{
 			renderer.set_char(enemy.get_prev_pos().X, enemy.get_prev_pos().Y, ' ', Color::WHITE, Color::BLACK);
 			renderer.set_char(enemy.get_curr_pos().X, enemy.get_curr_pos().Y, enemy.get_graphic(), enemy.get_foreground_color(), enemy.get_background_color());
@@ -136,6 +186,8 @@ int game_loop()
 	return 2;
 }
 
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
 int gameclear_loop()
 {
 	Renderer renderer;
@@ -169,6 +221,8 @@ int gameclear_loop()
 	// 選択肢の表示と取得
 	return get_selected_choices(renderer, choices, rendering_start_pos_x, rendering_start_pos_y);
 }
+
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
 int gameover_loop()
 {
@@ -204,7 +258,9 @@ int gameover_loop()
 	return get_selected_choices(renderer, choices, rendering_start_pos_x, rendering_start_pos_y);
 }
 
-int load_map(std::vector<Wall, StlAllocator<Wall>>& walls, std::vector<Enemy, StlAllocator<Enemy>>& enemys, COORD& player_start_pos, COORD& player_goal_pos)
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+int load_map(std::vector<Wall, StlAllocator<Wall>>& walls, std::vector<StraightEnemy, StlAllocator<StraightEnemy>>& straight_enemys, std::vector<RandomEnemy, StlAllocator<RandomEnemy>>& random_enemys, COORD& player_start_pos, COORD& player_goal_pos)
 {
 	Renderer renderer;
 
@@ -248,11 +304,13 @@ int load_map(std::vector<Wall, StlAllocator<Wall>>& walls, std::vector<Enemy, St
 					walls_pos_set.insert(std::make_pair(j, i));
 					break;
 				case 'E':
-					enemys.push_back(Enemy(j, i, true));
+					straight_enemys.push_back(StraightEnemy(j, i, true));
 					break;
 				case 'e':
-					enemys.push_back(Enemy(j, i, false));
+					straight_enemys.push_back(StraightEnemy(j, i, false));
 					break;
+				case 'R':
+					random_enemys.push_back(RandomEnemy(j, i));
 				default:
 					break;
 			}

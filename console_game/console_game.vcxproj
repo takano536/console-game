@@ -140,7 +140,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Creature.cpp" />
-    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="RandomEnemy.cpp" />
+    <ClCompile Include="StraightEnemy.cpp" />
     <ClCompile Include="FpsSustainer.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="get_selected_choices.cpp" />
@@ -160,7 +161,8 @@
     <ClInclude Include="ArrowKey.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Creature.h" />
-    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="RandomEnemy.h" />
+    <ClInclude Include="StraightEnemy.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="get_selected_choices.h" />
     <ClInclude Include="Goal.h" />

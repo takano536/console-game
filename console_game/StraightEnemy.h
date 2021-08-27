@@ -2,10 +2,10 @@
 
 #include "Creature.h"
 
-class Enemy : public Creature
+class StraightEnemy : public Creature
 {
 public:
-	Enemy(short x, short y, bool is_upper_case);
+	StraightEnemy(short x, short y, bool is_upper_case);
 	void move();
 	void set_reverse();
 

@@ -1,8 +1,8 @@
-#include "Enemy.h"
+#include "StraightEnemy.h"
 
 #include "Color.h"
 
-Enemy::Enemy(short x, short y, bool is_upper_case)
+StraightEnemy::StraightEnemy(short x, short y, bool is_upper_case)
 {
 	curr_pos = COORD{x, y};
 	prev_pos = COORD{x, y};
@@ -14,7 +14,7 @@ Enemy::Enemy(short x, short y, bool is_upper_case)
 	reverse = false;
 }
 
-void Enemy::move()
+void StraightEnemy::move()
 {
 	prev_pos.X = curr_pos.X;
 	prev_pos.Y = curr_pos.Y;
@@ -26,7 +26,7 @@ void Enemy::move()
 		curr_pos.Y += add;
 }
 
-void Enemy::set_reverse()
+void StraightEnemy::set_reverse()
 {
 	reverse = !reverse;
 }
