@@ -56,7 +56,7 @@ void Renderer::set_string(short x, short y, const std::string& str, Color foregr
 	}
 }
 
-char Renderer::get_char(short x, short y)
+char Renderer::get_char(short x, short y) const
 {
 	return screen_buffer[y][x].Char.AsciiChar;
 }
@@ -73,12 +73,12 @@ void Renderer::render()
 	WriteConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE), reinterpret_cast<CHAR_INFO*>(screen_buffer), BUFFER_SIZE, START_COORD, const_cast<SMALL_RECT*>(&WINDOW_SIZE));
 }
 
-short Renderer::get_max_width()
+short Renderer::get_max_width() const
 {
 	return MAX_WIDTH;
 }
 
-short Renderer::get_max_height()
+short Renderer::get_max_height() const
 {
 	return MAX_HEIGHT;
 }

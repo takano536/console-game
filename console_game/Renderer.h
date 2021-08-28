@@ -12,11 +12,11 @@ public:
 	void init_screen_buffer();
 	void set_char(short x, short y, char character, Color foreground_color, Color background_color);
 	void set_string(short x, short y, const std::string& str, Color foreground_color, Color background_color);
-	char get_char(short x, short y);
+	char get_char(short x, short y) const;
 	void change_monochrome();
 	void render();
-	short get_max_width();
-	short get_max_height();
+	short get_max_width() const;
+	short get_max_height() const;
 
 private:
 	static const short MAX_WIDTH = 120;               // ç≈ëÂâ°ïù

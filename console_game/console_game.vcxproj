@@ -139,6 +139,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Cannon.cpp" />
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="RandomEnemy.cpp" />
     <ClCompile Include="StraightEnemy.cpp" />
@@ -159,6 +161,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArrowKey.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Cannon.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="RandomEnemy.h" />

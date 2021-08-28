@@ -7,7 +7,7 @@ RandomEnemy::RandomEnemy(short x, short y)
 	curr_pos = COORD{x, y};
 	prev_pos = COORD{x, y};
 	graphic = 'R';
-	foreground_color = Color::PINK;
+	foreground_color = Color::SKY_BLUE;
 	background_color = Color::BLACK;
 	hp = 3;
 	direction = 0;
