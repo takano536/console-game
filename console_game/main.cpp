@@ -33,6 +33,7 @@ int main()
 		}
 
 		if (is_continue)
+		{
 			switch (game_result)
 			{
 				case -1:
@@ -52,6 +53,7 @@ int main()
 				default:
 					break;
 			}
+		}
 		game_result = 0;
 	}
 	return 0;
