@@ -7,7 +7,7 @@ Bullet::Bullet(short x, short y, uint8_t direction)
 	curr_pos = COORD{x, y};
 	prev_pos = COORD{x, y};
 	graphic = 'o';
-	foreground_color = Color::RED;
+	foreground_color = Color::YELLOW;
 	background_color = Color::BLACK;
 	hp = 1;
 	this->direction = direction;
