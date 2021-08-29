@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-std::string chars[27][7]{
+std::string chars[37][7]{
     {
         "      .o.      ",
         "     .888.     ",
@@ -238,6 +238,96 @@ std::string chars[27][7]{
         ".8888888888P ",
     },
     {
+        "  .oooo.  ",
+        " d8P'`Y8b ",
+        "888    888",
+        "888    888",
+        "888    888",
+        "`88b  d88'",
+        " `Y8bd8P' ",
+    },
+    {
+        "  .o ",
+        "o888 ",
+        " 888 ",
+        " 888 ",
+        " 888 ",
+        " 888 ",
+        "o888o",
+    },
+    {
+        "  .oooo.  ",
+        ".dP\"\"Y88b ",
+        "      ]8P'",
+        "    .d8P' ",
+        "  .dP'    ",
+        ".oP     .o",
+        "8888888888",
+    },
+    {
+        "  .oooo.  ",
+        ".dP\"\"Y88b ",
+        "      ]8P'",
+        "    <88b. ",
+        "     `88b.",
+        "o.   .88P ",
+        "`8bd88P'  ",
+    },
+    {
+        "      .o  ",
+        "    .d88  ",
+        "  .d'888  ",
+        ".d'  888  ",
+        "88ooo888oo",
+        "     888  ",
+        "    o888o ",
+    },
+    {
+        "  oooooooo",
+        " dP\"\"\"\"\"\"\"",
+        "d88888b.  ",
+        "    `Y88b ",
+        "      ]88 ",
+        "o.   .88P ",
+        "`8bd88P'  ",
+    },
+    {
+        "    .ooo  ",
+        "  .88'    ",
+        " d88'     ",
+        "d888P\"Ybo.",
+        "Y88[   ]88",
+        "`Y88   88P",
+        " `88bod8' ",
+    },
+    {
+        " ooooooooo",
+        "d\"\"\"\"\"\"\"8'",
+        "      .8' ",
+        "     .8'  ",
+        "    .8'   ",
+        "   .8'    ",
+        "  .8'     ",
+    },
+    {
+        " .ooooo.  ",
+        "d88'   `8.",
+        "Y88..  .8'",
+        " `88888b. ",
+        ".8'  ``88b",
+        "`8.   .88P",
+        " `boood8' ",
+    },
+    {
+        " .ooooo.  ",
+        "888' `Y88.",
+        "888    888",
+        " `Vbood888",
+        "      888'",
+        "    .88P' ",
+        "  .oP'    ",
+    },
+    {
         "888",
         "888",
         "888",
@@ -253,8 +343,10 @@ AsciiArt::AsciiArt(std::string str)
 	for (const auto& c : str)
 		for (int i = 0; i < line_num; i++)
 			if (c == '!')
-				ascii_art[i] += chars[26][i] + ' ';
-			else
-				ascii_art[i] += chars[static_cast<int>(c) - 'a'][i] + ' ';
+				ascii_art[i] += chars[36][i] + ' ';
+			else if (std::isdigit(c))
+				ascii_art[i] += chars[max(static_cast<int>(c) - '0' + 26, 0)][i] + ' ';
+			else if (std::islower(c))
+				ascii_art[i] += chars[max(static_cast<int>(c) - 'a', 0)][i] + ' ';
 	strings_len = ascii_art[0].size();
 }
