@@ -10,16 +10,17 @@
 #include <random>
 #include <windows.h>
 #include "StlAllocator.h"
+#include "AsciiArt.h"
 #include "Renderer.h"
 #include "FpsSustainer.h"
 #include "Color.h"
+#include "ArrowKeyPressDetector.h"
 #include "Player.h"
 #include "StraightEnemy.h"
 #include "RandomEnemy.h"
 #include "Wall.h"
 #include "Goal.h"
 #include "Cannon.h"
-#include "ArrowKeyPressDetector.h"
 
 #include "get_selected_choices.h"
 
@@ -241,19 +242,10 @@ int gameclear_loop()
 	renderer.init_window();
 
 	// ゲームクリア文字データ
-	std::vector<std::string, StlAllocator<std::string>> gameover_str = {
-	    "  .oooooo.   ooooo        oooooooooooo       .o.       ooooooooo.   888 888",
-	    " d8P'  `Y8b  `888'        `888'     `8      .888.      `888   `Y88. 888 888",
-	    "888           888          888             .8\"888.      888   .d88' 888 888",
-	    "888           888          888oooo8       .8' `888.     888ooo88P'  888 888",
-	    "888           888          888    \"      .88ooo8888.    888`88b.           ",
-	    "`88b    ooo   888       o  888       o  .8'     `888.   888  `88b.  d8b d8b",
-	    " `Y8bood8P'  o888ooooood8 o888ooooood8 o88o     o8888o o888o  o888o Y8P Y8P",
-	};
-	const short line_num = static_cast<short>(gameover_str.size());
-	COORD rendering_start_pos = {static_cast<short>((renderer.get_max_width() - gameover_str[0].size()) * 0.5), static_cast<short>((renderer.get_max_height() - line_num) * 0.5)};
-	for (int i = 0; i < line_num; i++)
-		renderer.set_string(rendering_start_pos.X, rendering_start_pos.Y + i, gameover_str[i], Color::WHITE, Color::BLACK);
+	AsciiArt clear_art("clear!!");
+	COORD rendering_start_pos = {static_cast<short>((renderer.get_max_width() - clear_art.strings_len) * 0.5), static_cast<short>((renderer.get_max_height() - clear_art.line_num) * 0.5)};
+	for (int i = 0; i < clear_art.line_num; i++)
+		renderer.set_string(rendering_start_pos.X, rendering_start_pos.Y + i, clear_art.ascii_art[i], Color::WHITE, Color::BLACK);
 	renderer.render();
 	Sleep(500);
 
@@ -277,19 +269,10 @@ int gameover_loop()
 	renderer.init_window();
 
 	// ゲームオーバー文字データ
-	std::vector<std::string, StlAllocator<std::string>> gameover_str = {
-	    "  .oooooo.          .o.       ooo        ooooo oooooooooooo      .oooooo.   oooooo     oooo oooooooooooo ooooooooo.  ",
-	    " d8P'  `Y8b        .888.      `88.       .888' `888'     `8     d8P'  `Y8b   `888.     .8'  `888'     `8 `888   `Y88.",
-	    "888               .8\"888.      888b     d'888   888            888      888   `888.   .8'    888          888   .d88'",
-	    "888              .8' `888.     8 Y88. .P  888   888oooo8       888      888    `888. .8'     888oooo8     888ooo88P' ",
-	    "888     ooooo   .88ooo8888.    8  `888'   888   888    \"       888      888     `888.8'      888    \"     888`88b.	  ",
-	    "`88.    .88'   .8'     `888.   8    Y     888   888       o    `88b    d88'      `888'       888       o  888  `88b. ",
-	    " `Y8bood8P'   o88o     o8888o o8o        o888o o888ooooood8     `Y8bood8P'        `8'       o888ooooood8 o888o  o888o",
-	};
-	const short line_num = static_cast<short>(gameover_str.size());
-	COORD rendering_start_pos = {static_cast<short>((renderer.get_max_width() - gameover_str[0].size()) * 0.5), static_cast<short>((renderer.get_max_height() - line_num) * 0.5)};
-	for (int i = 0; i < line_num; i++)
-		renderer.set_string(rendering_start_pos.X, rendering_start_pos.Y + i, gameover_str[i], Color::WHITE, Color::BLACK);
+	AsciiArt gameover_art("gameover");
+	COORD rendering_start_pos = {static_cast<short>((renderer.get_max_width() - gameover_art.strings_len) * 0.5), static_cast<short>((renderer.get_max_height() - gameover_art.line_num) * 0.5)};
+	for (int i = 0; i < gameover_art.line_num; i++)
+		renderer.set_string(rendering_start_pos.X, rendering_start_pos.Y + i, gameover_art.ascii_art[i], Color::WHITE, Color::BLACK);
 	renderer.render();
 	Sleep(500);
 

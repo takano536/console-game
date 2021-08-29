@@ -3,6 +3,7 @@
 #include <bitset>
 #include <cstdint>
 #include <stack>
+#include "StlAllocator.h"
 
 class ArrowKeyPressDetector final
 {

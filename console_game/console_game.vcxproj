@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AsciiArt.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Cannon.cpp" />
     <ClCompile Include="Creature.cpp" />
@@ -162,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArrowKey.h" />
+    <ClInclude Include="AsciiArt.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Cannon.h" />
     <ClInclude Include="Color.h" />
