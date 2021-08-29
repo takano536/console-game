@@ -3,15 +3,16 @@
 
 int main()
 {
-	bool is_continue = true;
-	int title_choices = 0;  // 0:ゲームスタート 1:オプション 2:終了
-	int game_result = 0;    // -1:異常終了 0:ゲームが始まっていない 1:ゲームオーバー 2:ゲームクリア
+	bool is_continue = true;  // 実行ファイルを終了せずに続けるかどうか
+	int title_choices = 0;    // 0:ゲームスタート 1:オプション 2:終了
+	int game_result = 0;      // -1:異常終了 0:ゲームが始まっていない 1:ゲームオーバー 2:ゲームクリア
+	bool is_retry = false;    // ゲームをリトライするかどうか
 	while (is_continue)
 	{
-		if (game_result == 0)
-			title_choices = title_loop();
-		else if (game_result == 1 || game_result == 2)  // リトライ
+		if (is_retry)
 			title_choices = 0;
+		else
+			title_choices = title_loop();
 
 		switch (title_choices)
 		{
@@ -31,10 +32,27 @@ int main()
 				break;
 		}
 
-		if (game_result == 1)  // loop()==0: リトライ
-			game_result = (gameover_loop() == 0 ? game_result : 0);
-		else if (game_result == 2)
-			game_result = (gameclear_loop() == 0 ? game_result : 0);
+		if (is_continue)
+			switch (game_result)
+			{
+				case -1:
+					game_result = 0;  // ゲームが始まっていない状態に戻す
+					break;
+
+				case 0:
+					break;
+
+				case 1:
+					is_retry = (gameover_loop() == 0 ? true : false);
+					break;
+
+				case 2:
+					is_retry = (gameclear_loop() == 0 ? true : false);
+					break;
+
+				default:
+					break;
+			}
 	}
 	return 0;
 }

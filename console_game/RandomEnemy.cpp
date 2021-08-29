@@ -40,12 +40,6 @@ void RandomEnemy::move(uint64_t rand)
 	}
 }
 
-void RandomEnemy::undo()
-{
-	curr_pos.X = prev_pos.X;
-	curr_pos.Y = prev_pos.Y;
-}
-
 void RandomEnemy::set_direction()
 {
 	direction = (direction + 1) % 4;

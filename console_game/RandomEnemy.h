@@ -1,14 +1,13 @@
 #pragma once
 
 #include <cstdint>
-#include "Object.h"
+#include "Creature.h"
 
-class RandomEnemy : public Object
+class RandomEnemy : public Creature
 {
 public:
 	RandomEnemy(short x, short y);
 	void move(uint64_t rand);
-	void undo();
 	void set_direction();
 
 private:
