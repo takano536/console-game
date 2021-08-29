@@ -142,6 +142,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Cannon.cpp" />
     <ClCompile Include="Creature.cpp" />
+    <ClCompile Include="ArrowKeyPressDetector.cpp" />
     <ClCompile Include="RandomEnemy.cpp" />
     <ClCompile Include="StraightEnemy.cpp" />
     <ClCompile Include="FpsSustainer.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Cannon.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Creature.h" />
+    <ClInclude Include="ArrowKeyPressDetector.h" />
     <ClInclude Include="RandomEnemy.h" />
     <ClInclude Include="StraightEnemy.h" />
     <ClInclude Include="game.h" />

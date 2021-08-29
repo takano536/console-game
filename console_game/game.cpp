@@ -19,6 +19,7 @@
 #include "Wall.h"
 #include "Goal.h"
 #include "Cannon.h"
+#include "ArrowKeyPressDetector.h"
 
 #include "get_selected_choices.h"
 
@@ -75,6 +76,7 @@ int game_loop()
 	uint32_t frame_count = 0;
 	Player player(player_start_pos.X, player_start_pos.Y);
 	uint8_t player_move_interval = 0;  // 等間隔で動くために使用
+	ArrowKeyPressDetector key_detector;
 	bool is_gameover = false;
 	bool is_gameclear = false;
 	while (!is_gameover && !is_gameclear)
@@ -83,20 +85,15 @@ int game_loop()
 		fps_sustainer.init_start_time();
 
 		// プレイヤーの移動
-		if (!player.is_long_press())
+		key_detector.update();
+		if (key_detector.get_curr_press().count() > 0 && key_detector.get_curr_press().count() > key_detector.get_prev_press().count())
 		{
-			player.move();
-			player.update_arrow_key_flag();
+			player.move(key_detector.get_last_pressed_key());
 			player_move_interval = frame_count % 3;
 		}
-		else if (frame_count % 3 == player_move_interval)
+		else if (key_detector.get_curr_press().count() > 0 && frame_count % 3 == player_move_interval)
 		{
-			player.update_arrow_key_flag();
-			player.move();
-		}
-		else
-		{
-			player.update_arrow_key_flag();
+			player.move(key_detector.get_last_pressed_key());
 		}
 		// 壁と被っていたら、前の座標に戻す
 		for (auto& obstacle : obstacles)
@@ -336,18 +333,19 @@ int load_map(
 	std::ifstream ifs(map_filepath);
 	if (ifs.fail())
 	{
-		std::cerr << "Failed to open \"map.txt\"..." << std::endl;
+		std::string message = "Failed to open \"map.txt\"...";
+		renderer.set_string(static_cast<short>(renderer.get_max_height() * 0.5), static_cast<short>((renderer.get_max_width() - message.size()) * 0.5), message, Color::WHITE, Color::BLACK);
+		Sleep(10000);
 		return -1;
 	}
 	std::string str;
 	short i = 0, j = 0;
-	bool is_failed = false;  // ファイル読み込みが失敗したかどうか
 	while (std::getline(ifs, str))
 	{
 		for (auto c : str)
 		{
 			if (i > renderer.get_max_height() - BOTTOM_MARGIN || j > renderer.get_max_width())
-				is_failed = true;
+				continue;
 			switch (c)
 			{
 				case 'S':
@@ -378,11 +376,6 @@ int load_map(
 		}
 		j = 0;
 		i++;
-	}
-	if (is_failed)
-	{
-		std::cerr << "Failed to open \"map.txt\"..." << std::endl;
-		return -1;
 	}
 
 	// walls の set を引数の vector にコピー
