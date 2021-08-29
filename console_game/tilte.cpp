@@ -8,11 +8,10 @@
 #include "Renderer.h"
 #include "FpsSustainer.h"
 #include "AsciiArt.h"
+#include "Choices.h"
 #include "Color.h"
 
-#include "get_selected_choices.h"
-
-static constexpr short TITLE_VERTICAL_MARGIN = 7;  // 縦方向の空白幅
+static constexpr short TITLE_VERTICAL_MARGIN = 7;
 
 int title_loop()
 {
@@ -43,17 +42,10 @@ int title_loop()
 	Sleep(100);
 
 	// 選択肢データ
-	std::vector<std::string, StlAllocator<std::string>> choices = {
-	    "GAME START",
-	    "  OPTION  ",
-	    "   QUIT   ",
-	};
-	short choices_strings_max_len = get_strings_max_len(choices);
-	short rendering_start_pos_x = static_cast<short>((renderer.get_max_width() - choices_strings_max_len) * 0.5 - 1);
-	short rendering_start_pos_y = static_cast<short>(renderer.get_max_height() - choices.size() - TITLE_VERTICAL_MARGIN);
+	Choices choices({"GAME START", "  OPTION  ", "   QUIT   "});
 
 	// 選択肢の表示と取得
-	return get_selected_choices(renderer, choices, rendering_start_pos_x, rendering_start_pos_y);
+	return choices.choices_loop(TITLE_VERTICAL_MARGIN, renderer);
 }
 
 void option_loop()
@@ -62,20 +54,12 @@ void option_loop()
 	renderer.init_window();
 
 	// 選択肢データ
-	std::vector<std::string, StlAllocator<std::string>> choices = {
-	    "MAP DATA FILE PATH",
-	    " PLAYER MOVEMENTS ",
-	    "    DIFFICULTY    ",
-	    "       BACK       ",
-	};
-	short choices_strings_max_len = get_strings_max_len(choices);
-	short rendering_start_pos_x = static_cast<short>((renderer.get_max_width() - choices_strings_max_len) * 0.5 - 1);
-	short rendering_start_pos_y = static_cast<short>((renderer.get_max_height() - choices.size()) * 0.5);
+	Choices choices({"MAP DATA FILE PATH", " PLAYER MOVEMENTS ", "    DIFFICULTY    ", "       BACK       "});
 
 	bool is_continue = true;
 	while (is_continue)
 	{
-		short selected_choices = get_selected_choices(renderer, choices, rendering_start_pos_x, rendering_start_pos_y);
+		short selected_choices = choices.choices_loop(static_cast<short>(renderer.get_max_height() - choices.get_choices_num()) * 0.5, renderer);
 		switch (selected_choices)
 		{
 			case 0:

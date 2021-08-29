@@ -14,6 +14,7 @@
 #include "Renderer.h"
 #include "FpsSustainer.h"
 #include "Color.h"
+#include "Choices.h"
 #include "ArrowKeyPressDetector.h"
 #include "Player.h"
 #include "StraightEnemy.h"
@@ -21,8 +22,6 @@
 #include "Wall.h"
 #include "Goal.h"
 #include "Cannon.h"
-
-#include "get_selected_choices.h"
 
 //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
@@ -236,56 +235,22 @@ int game_loop()
 
 //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
-int gameclear_loop()
+int game_end_loop(std::string display_str)
 {
 	Renderer renderer;
 	renderer.init_window();
 
-	// ゲームクリア文字データ
-	AsciiArt clear_art("clear!!");
+	AsciiArt clear_art(display_str);
 	COORD rendering_start_pos = {static_cast<short>((renderer.get_max_width() - clear_art.strings_len) * 0.5), static_cast<short>((renderer.get_max_height() - clear_art.line_num) * 0.5)};
 	for (int i = 0; i < clear_art.line_num; i++)
 		renderer.set_string(rendering_start_pos.X, rendering_start_pos.Y + i, clear_art.ascii_art[i], Color::WHITE, Color::BLACK);
 	renderer.render();
 	Sleep(500);
 
-	std::vector<std::string, StlAllocator<std::string>> choices = {
-	    "      RETRY      ",
-	    "BACK TO THE TITLE",
-	};
-	short choices_strings_max_len = get_strings_max_len(choices);
-	short rendering_start_pos_x = static_cast<short>((renderer.get_max_width() - choices_strings_max_len) * 0.5 - 1);
-	short rendering_start_pos_y = static_cast<short>(renderer.get_max_height() - choices.size() - 5);
+	Choices choices({"      RETRY      ", "BACK TO THE TITLE"});
 
 	// 選択肢の表示と取得
-	return get_selected_choices(renderer, choices, rendering_start_pos_x, rendering_start_pos_y);
-}
-
-//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-
-int gameover_loop()
-{
-	Renderer renderer;
-	renderer.init_window();
-
-	// ゲームオーバー文字データ
-	AsciiArt gameover_art("gameover");
-	COORD rendering_start_pos = {static_cast<short>((renderer.get_max_width() - gameover_art.strings_len) * 0.5), static_cast<short>((renderer.get_max_height() - gameover_art.line_num) * 0.5)};
-	for (int i = 0; i < gameover_art.line_num; i++)
-		renderer.set_string(rendering_start_pos.X, rendering_start_pos.Y + i, gameover_art.ascii_art[i], Color::WHITE, Color::BLACK);
-	renderer.render();
-	Sleep(500);
-
-	std::vector<std::string, StlAllocator<std::string>> choices = {
-	    "      RETRY      ",
-	    "BACK TO THE TITLE",
-	};
-	short choices_strings_max_len = get_strings_max_len(choices);
-	short rendering_start_pos_x = static_cast<short>((renderer.get_max_width() - choices_strings_max_len) * 0.5 - 1);
-	short rendering_start_pos_y = static_cast<short>(renderer.get_max_height() - choices.size() - 5);
-
-	// 選択肢の表示と取得
-	return get_selected_choices(renderer, choices, rendering_start_pos_x, rendering_start_pos_y);
+	return choices.choices_loop(5, renderer);
 }
 
 //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/

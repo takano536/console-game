@@ -13,11 +13,14 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\funtion">
+      <UniqueIdentifier>{c37ed753-cb7a-464e-888b-538de21496ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\function">
+      <UniqueIdentifier>{3bcaa3f7-7402-4e37-9268-1631163bfaaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="LinearAllocator.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -45,13 +48,7 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="tilte.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="game.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="get_selected_choices.cpp">
+    <ClCompile Include="Choices.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="RandomEnemy.cpp">
@@ -68,6 +65,15 @@
     </ClCompile>
     <ClCompile Include="AsciiArt.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>ソース ファイル\funtion</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル\funtion</Filter>
+    </ClCompile>
+    <ClCompile Include="tilte.cpp">
+      <Filter>ソース ファイル\funtion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,9 +104,6 @@
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowKey.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Wall.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -116,13 +119,7 @@
     <ClInclude Include="Color.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="title.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="get_selected_choices.h">
+    <ClInclude Include="Choices.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="RandomEnemy.h">
@@ -140,12 +137,15 @@
     <ClInclude Include="AsciiArt.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>ヘッダー ファイル\function</Filter>
+    </ClInclude>
+    <ClInclude Include="title.h">
+      <Filter>ヘッダー ファイル\function</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="map.txt">
-      <Filter>リソース ファイル</Filter>
-    </Text>
-    <Text Include="ascii.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
   </ItemGroup>

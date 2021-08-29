@@ -36,23 +36,23 @@ int main()
 			switch (game_result)
 			{
 				case -1:
-					game_result = 0;  // ゲームが始まっていない状態に戻す
 					break;
 
 				case 0:
 					break;
 
 				case 1:
-					is_retry = (gameover_loop() == 0 ? true : false);
+					is_retry = (game_end_loop("gameover") == 0 ? true : false);
 					break;
 
 				case 2:
-					is_retry = (gameclear_loop() == 0 ? true : false);
+					is_retry = (game_end_loop("clear!!") == 0 ? true : false);
 					break;
 
 				default:
 					break;
 			}
+		game_result = 0;
 	}
 	return 0;
 }
