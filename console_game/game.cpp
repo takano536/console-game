@@ -1,12 +1,10 @@
 #include "game.h"
 
 #include <iostream>
-#include <algorithm>
 #include <fstream>
 #include <vector>
 #include <string>
 #include <set>
-#include <utility>
 #include <random>
 #include <windows.h>
 #include "StlAllocator.h"
@@ -15,7 +13,7 @@
 #include "FpsSustainer.h"
 #include "Color.h"
 #include "Choices.h"
-#include "ArrowKeyPressDetector.h"
+#include "KeyPressDetector.h"
 #include "Player.h"
 #include "StraightEnemy.h"
 #include "RandomEnemy.h"
@@ -25,8 +23,9 @@
 
 //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
+static constexpr LPCTSTR filepath = L"./settings.ini";
+static const std::string map_filepath = "./map.txt";
 static constexpr short BOTTOM_MARGIN = 5;  // c•ûŒü‚Ì‹ó”’•
-static std::string map_filepath = "./map.txt";
 
 int load_map(
     std::vector<Wall, StlAllocator<Wall>>& walls,
@@ -35,6 +34,8 @@ int load_map(
     std::vector<Cannon, StlAllocator<Cannon>>& cannons,
     COORD& player_start_pos,
     COORD& player_goal_pos);
+
+void load_ini(int& level, int& speed);
 
 //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
@@ -65,6 +66,9 @@ int game_loop()
 	if (load_map(walls, straight_enemys, random_enemys, cannons, player_start_pos, player_goal_pos) == -1)
 		return -1;
 
+	int level = 0, speed = 0;
+	load_ini(level, speed);
+
 	std::vector<Object, StlAllocator<Object>> obstacles;
 	obstacles.reserve(walls.size() + cannons.size());
 	obstacles.insert(obstacles.end(), walls.begin(), walls.end());
@@ -76,7 +80,7 @@ int game_loop()
 	uint32_t frame_count = 0;
 	Player player(player_start_pos.X, player_start_pos.Y);
 	uint8_t player_move_interval = 0;  // “™ŠÔŠu‚Å“®‚­‚½‚ß‚Ég—p
-	ArrowKeyPressDetector key_detector;
+	KeyPressDetector key_detector;
 	bool is_gameover = false;
 	bool is_gameclear = false;
 	while (!is_gameover && !is_gameclear)
@@ -89,9 +93,9 @@ int game_loop()
 		if (key_detector.get_curr_press().count() > 0 && key_detector.get_curr_press().count() > key_detector.get_prev_press().count())
 		{
 			player.move(key_detector.get_last_pressed_key());
-			player_move_interval = frame_count % 3;
+			player_move_interval = frame_count % (3 - speed);
 		}
-		else if (key_detector.get_curr_press().count() > 0 && frame_count % 3 == player_move_interval)
+		else if (key_detector.get_curr_press().count() > 0 && frame_count % (3 - speed) == player_move_interval)
 		{
 			player.move(key_detector.get_last_pressed_key());
 		}
@@ -100,7 +104,7 @@ int game_loop()
 			if (is_collided(player, obstacle))
 				player.undo();
 
-		if (frame_count % 30 == 0)
+		if (frame_count % (30 - level * 10) == 0)
 			for (auto& cannon : cannons)
 			{
 				// ’e‚Ì¶¬
@@ -132,7 +136,7 @@ int game_loop()
 
 		for (auto& enemy : straight_enemys)
 		{
-			if (frame_count % 2 == 0)  // “G‚Ì“®‚­‘¬‚³‚ğ’²®
+			if (frame_count % max((2 - level), 1) == 0)  // “G‚Ì“®‚­‘¬‚³‚ğ’²®
 				enemy.move();
 			// •Ç‚Æ”í‚Á‚Ä‚¢‚½‚çA‘O‚ÌÀ•W‚É–ß‚·
 			for (auto& obstacle : obstacles)
@@ -144,7 +148,7 @@ int game_loop()
 		}
 		for (auto& enemy : random_enemys)
 		{
-			if (frame_count % 2 == 0)  // “G‚Ì“®‚­‘¬‚³‚ğ’²®
+			if (frame_count % max((2 - level), 1) == 0)  // “G‚Ì“®‚­‘¬‚³‚ğ’²®
 				enemy.move(get_rand());
 			// •Ç‚Æ”í‚Á‚Ä‚¢‚½‚çA‘O‚ÌÀ•W‚É–ß‚·
 			for (auto& obstacle : obstacles)
@@ -251,6 +255,18 @@ int game_end_loop(std::string display_str)
 
 	// ‘I‘ğˆ‚Ì•\¦‚Ææ“¾
 	return choices.choices_loop(5, renderer);
+}
+
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+void load_ini(int& level, int& speed)
+{
+	const int str_size = 128;
+	TCHAR level_str[str_size], speed_str[str_size];
+	GetPrivateProfileString(L"game", L"level", L"", level_str, str_size, L"./settings.ini");
+	GetPrivateProfileString(L"game", L"speed", L"", speed_str, str_size, L"./settings.ini");
+	level = _wtoi(level_str);
+	speed = _wtoi(speed_str);
 }
 
 //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
