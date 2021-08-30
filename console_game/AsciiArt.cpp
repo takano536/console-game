@@ -348,5 +348,5 @@ AsciiArt::AsciiArt(std::string str)
 				ascii_art[i] += chars[max(static_cast<int>(c) - '0' + 26, 0)][i] + ' ';
 			else if (std::islower(c))
 				ascii_art[i] += chars[max(static_cast<int>(c) - 'a', 0)][i] + ' ';
-	strings_len = ascii_art[0].size();
+	strings_len = static_cast<short>(ascii_art[0].size());
 }

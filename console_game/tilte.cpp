@@ -77,7 +77,7 @@ void option_loop()
 	bool is_continue = true;
 	while (is_continue)
 	{
-		short selected_choices = choices.choices_loop(static_cast<short>(renderer.get_max_height() - choices.get_choices_num()) * 0.5, renderer);
+		short selected_choices = choices.choices_loop(static_cast<short>((renderer.get_max_height() - choices.get_choices_num()) * 0.5), renderer);
 		switch (selected_choices)
 		{
 			case 0:

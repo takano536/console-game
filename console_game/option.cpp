@@ -15,7 +15,7 @@ void update_game_level()
 	renderer.init_window();
 
 	Choices choices({" EASY ", "NORMAL", " HARD ", "INSANE"});
-	int level = choices.choices_loop(static_cast<short>(renderer.get_max_height() - choices.get_choices_num()) * 0.5, renderer) - 1;
+	int level = choices.choices_loop(static_cast<short>((renderer.get_max_height() - choices.get_choices_num()) * 0.5), renderer) - 1;
 	TCHAR str[8];
 	wsprintf(str, TEXT("%d"), level);
 	WritePrivateProfileString(L"game", L"level", str, filepath);
@@ -33,7 +33,7 @@ void update_movement_speed()
 	renderer.init_window();
 
 	Choices choices({" SLOW ", "NORMAL", " FAST "});
-	int speed = choices.choices_loop(static_cast<short>(renderer.get_max_height() - choices.get_choices_num()) * 0.5, renderer) - 1;
+	int speed = choices.choices_loop(static_cast<short>((renderer.get_max_height() - choices.get_choices_num()) * 0.5), renderer) - 1;
 	TCHAR str[8];
 	wsprintf(str, TEXT("%d"), speed);
 	WritePrivateProfileString(L"game", L"speed", str, filepath);

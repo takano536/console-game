@@ -63,7 +63,7 @@ int Choices::choices_loop(short vertical_margin, Renderer& renderer)
 
 short Choices::get_choices_num()
 {
-	return choices.size();
+	return static_cast<short>(choices.size());
 }
 
 short Choices::get_strings_max_len()

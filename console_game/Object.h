@@ -4,6 +4,7 @@
 #include <windows.h>
 #include "Color.h"
 
+// Šî’êƒNƒ‰ƒX
 class Object
 {
 public:

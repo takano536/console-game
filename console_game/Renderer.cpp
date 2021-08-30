@@ -48,7 +48,7 @@ void Renderer::set_char(short x, short y, char character, Color foreground_color
 
 void Renderer::set_string(short x, short y, const std::string& str, Color foreground_color, Color background_color)
 {
-	short len = str.size();
+	short len = static_cast<short>(str.size());
 	for (int i = 0; i < len; i++)
 	{
 		screen_buffer[y][x + i].Char.AsciiChar = str[i];
