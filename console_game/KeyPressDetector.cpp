@@ -13,7 +13,7 @@ KeyPressDetector::KeyPressDetector()
 
 	prev_press = curr_press;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 		if (curr_press.test(i))
 			pressed_keys.push(i);
 }

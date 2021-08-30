@@ -66,7 +66,7 @@ int game_loop()
 	std::vector<Cannon, StlAllocator<Cannon>> cannons;
 	cannons.reserve(static_cast<std::vector<Cannon, StlAllocator<Cannon>>::size_type>(renderer.get_max_width()) * renderer.get_max_height());
 	COORD player_start_pos = COORD{1, 1};
-	COORD player_goal_pos = COORD{static_cast<short>(renderer.get_max_height() - BOTTOM_MARGIN - 1), static_cast<short>(renderer.get_max_width() - 1)};
+	COORD player_goal_pos = COORD{2, 2};
 	if (load_map(walls, straight_enemys, random_enemys, cannons, player_start_pos, player_goal_pos) == -1)
 		return -1;
 	Goal goal(player_goal_pos.X, player_goal_pos.Y);
@@ -107,6 +107,8 @@ int game_loop()
 	renderer.init_screen_buffer();
 	std::string message = "ARROW KEY: MOVE   ESCAPE KEY: BACK TITLE";
 	renderer.set_string((renderer.get_max_width() - 1) - static_cast<short>(message.size()) - 1, renderer.get_max_height() - 2, message, Color::WHITE, Color::BLACK);
+	message = "@->YOU   G->GOAL";
+	renderer.set_string((renderer.get_max_width() - 1) - static_cast<short>(message.size()) - 1, renderer.get_max_height() - 1, message, Color::WHITE, Color::BLACK);
 	while (!is_gameover && !is_gameclear)
 	{
 		// 1 フレームの時間を確かめるため、現在時刻で初期化
@@ -206,14 +208,14 @@ int game_loop()
 			renderer.set_char(enemy.get_prev_pos().X, enemy.get_prev_pos().Y, ' ', Color::WHITE, Color::BLACK);
 			renderer.set_char(enemy.get_curr_pos().X, enemy.get_curr_pos().Y, enemy.get_graphic(), enemy.get_foreground_color(), enemy.get_background_color());
 		}
-		renderer.set_char(goal.get_curr_pos().X, goal.get_curr_pos().Y, goal.get_graphic(), goal.get_foreground_color(), goal.get_background_color());
-		renderer.set_char(player.get_prev_pos().X, player.get_prev_pos().Y, ' ', Color::WHITE, Color::BLACK);
-		renderer.set_char(player.get_curr_pos().X, player.get_curr_pos().Y, player.get_graphic(), player.get_foreground_color(), player.get_background_color());
 		for (const auto& wall : walls)
 			renderer.set_char(wall.get_curr_pos().X, wall.get_curr_pos().Y, wall.get_graphic(), wall.get_foreground_color(), wall.get_background_color());
 		for (const auto& cannon : cannons)
 			renderer.set_char(cannon.get_curr_pos().X, cannon.get_curr_pos().Y, cannon.get_graphic(), cannon.get_foreground_color(), cannon.get_background_color());
 		std::string time_str = "TIME " + convert_time(time);
+		renderer.set_char(goal.get_curr_pos().X, goal.get_curr_pos().Y, goal.get_graphic(), goal.get_foreground_color(), goal.get_background_color());
+		renderer.set_char(player.get_prev_pos().X, player.get_prev_pos().Y, ' ', Color::WHITE, Color::BLACK);
+		renderer.set_char(player.get_curr_pos().X, player.get_curr_pos().Y, player.get_graphic(), player.get_foreground_color(), player.get_background_color());
 		renderer.set_string(static_cast<short>((renderer.get_max_width() - time_str.size()) * 0.5), static_cast<short>(renderer.get_max_height() - std::ceil(static_cast<double>(BOTTOM_MARGIN) / 2)), time_str, Color::WHITE, Color::BLACK);
 
 		// 描画反映
@@ -285,7 +287,7 @@ int game_end_loop(std::string display_str)
 	AsciiArt clear_art(display_str);
 	COORD rendering_start_pos = {static_cast<short>((renderer.get_max_width() - clear_art.strings_len) * 0.5), static_cast<short>((renderer.get_max_height() - clear_art.line_num) * 0.5)};
 	for (int i = 0; i < clear_art.line_num; i++)
-		renderer.set_string(rendering_start_pos.X, rendering_start_pos.Y + i, clear_art.ascii_art[i], Color::WHITE, Color::BLACK);
+		renderer.set_string(rendering_start_pos.X, rendering_start_pos.Y + i, clear_art.ascii_art[i], Color::YELLOW, Color::BLACK);
 	renderer.render();
 	Sleep(500);
 
@@ -335,9 +337,12 @@ int load_map(
 	std::ifstream ifs(map_filepath);
 	if (ifs.fail())
 	{
-		std::string message = "Failed to open \"map.txt\"...";
-		renderer.set_string(static_cast<short>(renderer.get_max_height() * 0.5), static_cast<short>((renderer.get_max_width() - message.size()) * 0.5), message, Color::WHITE, Color::BLACK);
-		Sleep(10000);
+		std::string message = "FAILED TO OPEN \"map.txt\"...";
+		renderer.init_window();
+		renderer.set_string(static_cast<short>((renderer.get_max_width() - message.size()) * 0.5), static_cast<short>(renderer.get_max_height() * 0.5), message, Color::WHITE, Color::BLACK);
+		renderer.render();
+		Choices back({"BACK"});
+		back.choices_loop(5, renderer);
 		return -1;
 	}
 	std::string str;
@@ -346,8 +351,16 @@ int load_map(
 	{
 		for (auto c : str)
 		{
-			if (i > renderer.get_max_height() - BOTTOM_MARGIN || j > renderer.get_max_width())
+			if (i >= renderer.get_max_height() - BOTTOM_MARGIN - 1 || j >= renderer.get_max_width() - 1)
 				continue;
+			if (i == 0)
+				break;
+			if (j == 0)
+			{
+				j++;
+				continue;
+			}
+
 			switch (c)
 			{
 				case 'S':

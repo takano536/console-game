@@ -37,9 +37,11 @@ int main()
 			switch (game_result)
 			{
 				case -1:
+					is_retry = false;
 					break;
 
 				case 0:
+					is_retry = false;
 					break;
 
 				case 1:
