@@ -75,7 +75,7 @@ int game_loop()
 	int level = 0, speed = 0;
 	load_ini(level, speed);
 
-	std::vector<Object, StlAllocator<Object>> obstacles;
+	std::vector<Object, StlAllocator<Object>> obstacles;  // 衝突判定のときに使用
 	obstacles.reserve(walls.size() + cannons.size());
 	obstacles.insert(obstacles.end(), walls.begin(), walls.end());
 	obstacles.insert(obstacles.end(), cannons.begin(), cannons.end());
@@ -85,7 +85,7 @@ int game_loop()
 	uint32_t time = 0;
 
 	Player player(player_start_pos.X, player_start_pos.Y);
-	uint8_t player_move_interval = 0;  // 等間隔で動くために使用
+	uint8_t player_move_interval = 0;  // 長押し時に等間隔で動くために使用
 	KeyPressDetector key_detector;
 
 	bool is_gameover = false;
@@ -104,11 +104,14 @@ int game_loop()
 	}
 	Sleep(100);
 
+	// 操作説明などをバッファに書き込む
 	renderer.init_screen_buffer();
 	std::string message = "ARROW KEY: MOVE   ESCAPE KEY: BACK TITLE";
 	renderer.set_string((renderer.get_max_width() - 1) - static_cast<short>(message.size()) - 1, renderer.get_max_height() - 2, message, Color::WHITE, Color::BLACK);
 	message = "@->YOU   G->GOAL";
 	renderer.set_string((renderer.get_max_width() - 1) - static_cast<short>(message.size()) - 1, renderer.get_max_height() - 1, message, Color::WHITE, Color::BLACK);
+
+	// if (frame_count % x == 0) は、ゲーム進行を緩やかにするための処理
 	while (!is_gameover && !is_gameclear)
 	{
 		// 1 フレームの時間を確かめるため、現在時刻で初期化
@@ -122,11 +125,15 @@ int game_loop()
 		key_detector.update();
 		if (key_detector.get_curr_press().count() > 0 && key_detector.get_curr_press().count() > key_detector.get_prev_press().count())
 		{
+			// ボタンが押された瞬間の処理
+			// そもそも、現在フレームでキーが押されていないと動かない
+			// 前フレームと比較して押されているボタンの種類が増えていれば良い
 			player.move(key_detector.get_last_pressed_key());
-			player_move_interval = frame_count % (3 - speed);
+			player_move_interval = frame_count % max(3 - speed, 1);
 		}
-		else if (key_detector.get_curr_press().count() > 0 && frame_count % (3 - speed) == player_move_interval)
+		else if (key_detector.get_curr_press().count() > 0 && frame_count % max(3 - speed, 1) == player_move_interval)
 		{
+			// ボタンが長押しされているときの処理
 			player.move(key_detector.get_last_pressed_key());
 		}
 		// 壁と被っていたら、前の座標に戻す
@@ -134,6 +141,7 @@ int game_loop()
 			if (is_collided(player, obstacle))
 				player.undo();
 
+		// bullet が壁と衝突していたら削除
 		auto iter = bullets.begin();
 		while (iter != bullets.end())
 		{
@@ -153,7 +161,7 @@ int game_loop()
 		bullets.shrink_to_fit();
 		for (auto& bullet : bullets)
 			bullet.move();
-		if (frame_count % (30 - level * 10) == 0)
+		if (frame_count % max(30 - level * 10, 1) == 0)
 		{
 			for (auto& cannon : cannons)
 			{
@@ -231,21 +239,21 @@ int game_loop()
 		}
 
 		frame_count = (frame_count + 1) % fps_sustainer.get_fps();
-		if (frame_count == 0)
+		if (frame_count == 0)  // fps で割っているため、余りが 0 のときにちょうど 1 秒経過したことになる。
 			time = (time + 1) % UINT32_MAX;
 
 		// 時間に余裕があれば待つ
 		fps_sustainer.wait();
 	}
 
-	// escape
+	// escape が押された
 	if (!is_gameover && !is_gameclear)
 	{
 		Sleep(500);
 		return 0;
 	}
 
-	// プレイヤー以外の色をモノクロにする
+	// ゲームオーバーならレイヤー以外の色をモノクロにする
 	if (is_gameover)
 		renderer.change_monochrome();
 
@@ -279,6 +287,7 @@ int game_loop()
 
 //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
+// ゲームが終了したときの画面
 int game_end_loop(std::string display_str)
 {
 	Renderer renderer;
@@ -303,8 +312,8 @@ void load_ini(int& level, int& speed)
 {
 	const int str_size = 128;
 	TCHAR level_str[str_size], speed_str[str_size];
-	GetPrivateProfileString(L"game", L"level", L"", level_str, str_size, L"./settings.ini");
-	GetPrivateProfileString(L"game", L"speed", L"", speed_str, str_size, L"./settings.ini");
+	GetPrivateProfileString(L"game", L"level", L"", level_str, str_size, filepath);
+	GetPrivateProfileString(L"game", L"speed", L"", speed_str, str_size, filepath);
 	level = _wtoi(level_str);
 	speed = _wtoi(speed_str);
 }
@@ -321,9 +330,9 @@ int load_map(
 {
 	Renderer renderer;
 
-	std::set<std::pair<int, int>> walls_pos_set;  // 壁の座標がかぶる可能性があるので、set で管理
+	std::set<std::pair<int, int>> walls_pos_set;  // 壁の座標が重複する可能性があるので、set で管理
 
-	// 一番外の壁がないと大変なことになるので、最初から入れとく
+	// 一番外の壁がないと大変なことになるので、最初から入れておく
 	for (int i = 0; i < renderer.get_max_height() - BOTTOM_MARGIN; i++)  // 左の壁
 		walls_pos_set.insert(std::make_pair(0, i));
 	for (int i = 0; i < renderer.get_max_height() - BOTTOM_MARGIN; i++)  // 右の壁
@@ -351,11 +360,11 @@ int load_map(
 	{
 		for (auto c : str)
 		{
-			if (i >= renderer.get_max_height() - BOTTOM_MARGIN - 1 || j >= renderer.get_max_width() - 1)
+			if (i >= renderer.get_max_height() - BOTTOM_MARGIN - 1 || j >= renderer.get_max_width() - 1)  // 範囲外は読み込まない
 				continue;
-			if (i == 0)
+			if (i == 0)  // 一番上の情報は読み込まない
 				break;
-			if (j == 0)
+			if (j == 0)  // 一番右の情報は読み込まない
 			{
 				j++;
 				continue;
@@ -393,7 +402,7 @@ int load_map(
 		i++;
 	}
 
-	// walls の set を引数の vector にコピー
+	// walls の set を、引数の vector にコピー
 	for (const auto& pos : walls_pos_set)
 		walls.push_back(Wall(pos.first, pos.second));
 

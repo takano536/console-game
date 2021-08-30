@@ -19,6 +19,18 @@
     <Filter Include="ヘッダー ファイル\function">
       <UniqueIdentifier>{3bcaa3f7-7402-4e37-9268-1631163bfaaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\object">
+      <UniqueIdentifier>{4ae4acc0-d05b-4ca4-b2af-729ff51d8b52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object\creature">
+      <UniqueIdentifier>{33908c53-0b59-443f-95af-7f87106dc8d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\object">
+      <UniqueIdentifier>{f98fc985-b091-47b3-901b-3a28a31fb788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\object\creature">
+      <UniqueIdentifier>{69c9eb31-05c7-4006-b7f6-f6be7681530b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LinearAllocator.cpp">
@@ -27,37 +39,10 @@
     <ClCompile Include="FpsSustainer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Wall.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="StraightEnemy.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Creature.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Goal.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Choices.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="RandomEnemy.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Cannon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="KeyPressDetector.cpp">
@@ -77,6 +62,33 @@
     </ClCompile>
     <ClCompile Include="option.cpp">
       <Filter>ソース ファイル\funtion</Filter>
+    </ClCompile>
+    <ClCompile Include="Cannon.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Goal.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>ソース ファイル\object\creature</Filter>
+    </ClCompile>
+    <ClCompile Include="Creature.cpp">
+      <Filter>ソース ファイル\object\creature</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル\object\creature</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomEnemy.cpp">
+      <Filter>ソース ファイル\object\creature</Filter>
+    </ClCompile>
+    <ClCompile Include="StraightEnemy.cpp">
+      <Filter>ソース ファイル\object\creature</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,24 +113,6 @@
     <ClInclude Include="UniquePtrDeleter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Creature.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Wall.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="StraightEnemy.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Goal.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -126,15 +120,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Choices.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="RandomEnemy.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Cannon.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="KeyPressDetector.h">
@@ -151,6 +136,33 @@
     </ClInclude>
     <ClInclude Include="option.h">
       <Filter>ヘッダー ファイル\function</Filter>
+    </ClInclude>
+    <ClInclude Include="Cannon.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Goal.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>ヘッダー ファイル\object\creature</Filter>
+    </ClInclude>
+    <ClInclude Include="Creature.h">
+      <Filter>ヘッダー ファイル\object\creature</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル\object\creature</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomEnemy.h">
+      <Filter>ヘッダー ファイル\object\creature</Filter>
+    </ClInclude>
+    <ClInclude Include="StraightEnemy.h">
+      <Filter>ヘッダー ファイル\object\creature</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

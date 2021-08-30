@@ -2,6 +2,7 @@
 
 #include <windows.h>
 
+// Object の引数に使う色をまとめた enum クラス
 enum class Color : WORD
 {
 	BLACK,

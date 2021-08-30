@@ -5,6 +5,7 @@
 #include <windows.h>
 #include "StlAllocator.h"
 
+// アスキーアート文字の構造体
 struct AsciiArt final
 {
 	AsciiArt(std::string str);

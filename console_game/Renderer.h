@@ -8,12 +8,12 @@ class Renderer final
 {
 public:
 	Renderer();
-	void init_window();
+	void init_window();  // 画面の設定を初期化する。
 	void init_screen_buffer();
-	void set_char(short x, short y, char character, Color foreground_color, Color background_color);
+	void set_char(short x, short y, char character, Color foreground_color, Color background_color);  // x, y は描画開始位置
 	void set_string(short x, short y, const std::string& str, Color foreground_color, Color background_color);
 	char get_char(short x, short y) const;
-	void change_monochrome();
+	void change_monochrome();  // バッファに書かれた文字をモノクロにする
 	void render();
 	short get_max_width() const;
 	short get_max_height() const;

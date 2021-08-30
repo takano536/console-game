@@ -19,16 +19,16 @@ void Player::move(uint8_t last_pressed_key)
 
 	switch (last_pressed_key)
 	{
-		case 0:
+		case 0:  // è„
 			curr_pos.Y--;
 			break;
-		case 1:
+		case 1:  // âE
 			curr_pos.X++;
 			break;
-		case 2:
+		case 2:  // â∫
 			curr_pos.Y++;
 			break;
-		case 3:
+		case 3:  // ç∂
 			curr_pos.X--;
 			break;
 		defaut:

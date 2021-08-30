@@ -5,6 +5,8 @@
 #include <vector>
 #include "LinearAllocator.h"
 
+// かなりやばいことしてそう...
+
 extern std::unique_ptr<iMemoryAllocator> custom_allocator;  // LinearAllocator.cpp にインスタンス有り
 
 // STL コンテナに自作アロケータを使用するためのテンプレート

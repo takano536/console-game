@@ -53,6 +53,7 @@ int title_loop()
 		renderer.render();
 		Sleep(100);
 	}
+	// アニメーションスキップがあるかもしれないので、タイトルを再度描画
 	renderer.init_screen_buffer();
 	title_rendering_start_pos.Y = TITLE_VERTICAL_MARGIN - 1;
 	for (int i = 0; i < title_art.line_num; i++)
@@ -60,7 +61,6 @@ int title_loop()
 	renderer.render();
 	Sleep(100);
 
-	// 選択肢データ
 	Choices choices({"GAME START", "  OPTION  ", "   QUIT   "});
 
 	// 選択肢の表示と取得
@@ -72,7 +72,6 @@ void option_loop()
 	Renderer renderer;
 	renderer.init_window();
 
-	// 選択肢データ
 	Choices choices({"  DIFFICULTY  ", "MOVEMENT SPEED", "     BACK     "});
 
 	bool is_continue = true;
@@ -89,7 +88,7 @@ void option_loop()
 				update_movement_speed();
 				break;
 
-			case 2:
+			case 2:  // 終了
 				is_continue = false;
 				break;
 

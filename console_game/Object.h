@@ -15,12 +15,12 @@ public:
 	Color get_background_color() const;
 
 protected:
-	COORD curr_pos;
-	COORD prev_pos;
+	COORD curr_pos;  // 現在のフレームでの位置
+	COORD prev_pos;  // 前のフレームでの位置
 	char graphic;
 	Color foreground_color;
 	Color background_color;
-	int16_t hp;
+	int16_t hp;  // 時間が足りなくて使わなかった
 };
 
 bool is_collided(Object a, Object b);
